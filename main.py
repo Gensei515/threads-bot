@@ -1,7 +1,5 @@
 import anthropic
 import requests
-import schedule
-import time
 import os
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
@@ -23,7 +21,6 @@ def generate_post():
     return message.content[0].text
 
 def post_to_threads(text):
-    # Step 1: コンテナ作成
     url = f"https://graph.threads.net/v1.0/{THREADS_USER_ID}/threads"
     params = {
         "media_type": "TEXT",
@@ -37,7 +34,6 @@ def post_to_threads(text):
         print(f"エラー: {response.json()}")
         return
     
-    # Step 2: 投稿
     publish_url = f"https://graph.threads.net/v1.0/{THREADS_USER_ID}/threads_publish"
     publish_params = {
         "creation_id": container_id,
@@ -46,19 +42,7 @@ def post_to_threads(text):
     publish_response = requests.post(publish_url, params=publish_params)
     print(f"投稿完了: {publish_response.json()}")
 
-def job():
-    print("投稿を生成中...")
-    text = generate_post()
-    print(f"生成された投稿: {text}")
-    post_to_threads(text)
-
-# 1日3回投稿（9時、13時、18時）
-schedule.every().day.at("09:00").do(job)
-schedule.every().day.at("13:00").do(job)
-schedule.every().day.at("18:00").do(job)
-
-print("Threads自動投稿Bot起動中...")
-job()  # 起動時に1回実行
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+print("投稿を生成中...")
+text = generate_post()
+print(f"生成された投稿: {text}")
+post_to_threads(text)

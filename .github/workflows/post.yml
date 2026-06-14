@@ -1,0 +1,23 @@
+name: Threads Auto Post
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # 9時 JST
+    - cron: '0 4 * * *'   # 13時 JST
+    - cron: '0 9 * * *'   # 18時 JST
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: python main.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
