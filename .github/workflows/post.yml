@@ -2,17 +2,17 @@ name: Threads Auto Post
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 9時 JST
-    - cron: '0 4 * * *'   # 13時 JST
-    - cron: '0 9 * * *'   # 18時 JST
+    - cron: '0 0 * * *'   # 日本時間 9:00
+    - cron: '0 4 * * *'   # 日本時間 13:00
+    - cron: '0 9 * * *'   # 日本時間 18:00
   workflow_dispatch:
 
 jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
